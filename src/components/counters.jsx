@@ -1,37 +1,46 @@
-import React, { Component } from "react";
+import React from "react";
+import { connect } from "react-redux";
 import Counter from "./counter";
+import * as actions from "../redux/actions";
 
-class Counters extends Component {
-  render() {
-    const {
-      onReset,
-      onIncrement,
-      onDecrement,
-      onDelete,
-      change,
-      changeToDo,
-      character
-    } = this.props;
-    return (
+const Counters = ({ counters, onResetCounter, getData, characters }) => {
+  return (
+    <div>
+      <button className="btn btn-primary btn-sm m-2" onClick={onResetCounter}>
+        Reset
+      </button>
+      {counters.map(counter => (
+        <Counter key={counter.id} counter={counter} />
+      ))}
+      <button onClick={getData} className="btn btn-secondary btn-sm m-2">
+        GET DATA
+      </button>
       <div>
-        <button className="btn btn-primary btn-sm m-2" onClick={onReset}>
-          Reset
-        </button>
-        {this.props.counters.map(counter => (
-          <Counter
-            key={counter.id}
-            onIncrement={onIncrement}
-            onDecrement={onDecrement}
-            onDelete={onDelete}
-            counter={counter}
-            change={change}
-            changeToDo={changeToDo}
-            character={character}
-          />
+        {characters.map((chr, index) => (
+          <p key={index}>
+            {chr.name} -- {chr.gender}
+          </p>
         ))}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default Counters;
+const s = state => {
+  return {
+    counters: state.cntRed.counters,
+    characters: state.data.characters
+  };
+};
+
+const d = dispatch => {
+  return {
+    onResetCounter: () => dispatch(actions.doReset()),
+    getData: () => dispatch(actions.getData())
+  };
+};
+
+export default connect(
+  s,
+  d
+)(Counters);

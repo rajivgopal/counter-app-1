@@ -1,4 +1,7 @@
 import React from "react";
+import { connect } from "react-redux";
+
+import * as actions from "../redux/actions";
 
 const Counter = props => {
   const {
@@ -14,13 +17,13 @@ const Counter = props => {
     <div>
       <span className={getBadgeClass()}>{formatCount()}</span>
       <button
-        onClick={() => onIncrement(counter)}
+        onClick={() => onIncrement(counter.id)}
         className="btn btn-secondary btn-sm m-2"
       >
         +
       </button>
       <button
-        onClick={() => onDecrement(counter)}
+        onClick={() => onDecrement(counter.id)}
         className="btn btn-secondary btn-sm m-2"
       >
         -
@@ -36,7 +39,7 @@ const Counter = props => {
         // ref={this.inputRef}
         type="text"
         value={counter.value}
-        onChange={event => change(event, counter)}
+        onChange={event => change(event.target.value, counter.id)}
       />
       <input
         className="btn btn-secondary btn-danger m-2 {props.cbStyle}"
@@ -46,7 +49,6 @@ const Counter = props => {
         onChange={() => changeToDo(counter.id)}
       />
       <p className={getCompletedStyle()}>{counter.toDo}</p>
-      <p>{props.character}</p>
     </div>
   );
 
@@ -69,4 +71,22 @@ const Counter = props => {
   }
 };
 
-export default Counter;
+const s = (state, ownProps) => {
+  return {
+    counter: ownProps.counter
+  };
+};
+
+const d = (dispatch, ownProps) => {
+  return {
+    onIncrement: id => dispatch(actions.doIncrement(id)),
+    onDecrement: id => dispatch(actions.doDecrement(id)),
+    onDelete: id => dispatch(actions.doDelete(id)),
+    change: (value, id) => dispatch(actions.handleChange(value, id)),
+    changeToDo: id => dispatch(actions.handleChangeToDo(id))
+  };
+};
+export default connect(
+  s,
+  d
+)(Counter);

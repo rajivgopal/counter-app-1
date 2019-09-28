@@ -1,18 +1,19 @@
-import React, { Component } from "react";
+import React from "react";
+import { connect } from "react-redux";
 
-class NavBar extends Component {
-  render() {
-    return (
-      <nav className="navbar navbar-light bg-light">
-        <a href="#" className="navbar-brand">
-          Navbar{" "}
-          <span className="badge badge-pill badge-secondary">
-            {this.props.totalCounts}
-          </span>
-        </a>
-      </nav>
-    );
-  }
-}
+const NavBar = ({ totalCounts }) => {
+  return (
+    <nav className="navbar navbar-light bg-light">
+      <a href="/" className="navbar-brand">
+        Navbar{" "}
+        <span className="badge badge-pill badge-secondary">{totalCounts}</span>
+      </a>
+    </nav>
+  );
+};
 
-export default NavBar;
+const s = (state, ownProps) => ({
+  totalCounts: state.cntRed.counters.filter(c => c.value > 0).length
+});
+
+export default connect(s)(NavBar);
